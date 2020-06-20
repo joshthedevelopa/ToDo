@@ -1,14 +1,14 @@
 import "package:flutter/material.dart";
-import "./login.dart";
 
-void main() => runApp(ToDo());
-
-class ToDo extends StatelessWidget {
+class Home extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'ToDo App',
-      home:  Login(),
+      home:  Scaffold(
+        appBar: AppBar(
+          title: Text("Welcome to the HomePage") ) ,
+      ),
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
