@@ -36,7 +36,7 @@ class Login extends StatefulWidget {
         keyboardType: TextInputType.emailAddress,
         autofocus: false,
         decoration: InputDecoration(
-          hintText: 'We promise not to tellg',
+          hintText: 'We promise not to tell',
           labelText: 'Email',
           icon : Icon(
             Icons.mail,
