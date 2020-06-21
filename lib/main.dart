@@ -8,10 +8,7 @@ class ToDo extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'ToDo App',
-      home:  Login(),
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
+        home:  Login(),
     );
   }
 }

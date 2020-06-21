@@ -11,33 +11,68 @@ class Login extends StatefulWidget {
     @override
     Widget build(BuildContext context) {
       return Scaffold(
-        appBar: AppBar(
-          title: Text("Welcome to TODO"),
+        body: 
+        Stack(
+        children: [
+          Container(
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage('images/Background.jpeg'),
+                fit: BoxFit.cover,
           ),
-        body: ListView(
-          children: [
+        ),
+      ),
+           ListView(
+            children: [
+            showHeader(),
             showEmailInput(),
             showPasswordInput(),
             showPrimaryButton(context),
             showSecondaryButton(),
           ],
+        ),
+        ],
         )
-        );  
+      );  
     }
   }
-
+  Widget showHeader(){
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(0.0, 60.0, 0.0, 0.0),
+      child: 
+        Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+        Text("BB Saves", style:TextStyle(fontSize: 30.0, fontWeight: FontWeight.w500, color: Colors.white
+        ),
+    ),
+        SizedBox(height: 25),
+        Text("Save and organize your tasks and project ideas on BB Saves", 
+        textAlign: TextAlign.center,
+        style:TextStyle(fontSize: 20.0, fontWeight: FontWeight.w100, color: Colors.white
+        ),
+            ),
+        ]
+    ),
+    );
+  }
 
   Widget showEmailInput(){
     var _email;
     return Padding(
-      padding: const EdgeInsets.fromLTRB(0.0,50.0,0.0,0.0),
+      padding: const EdgeInsets.fromLTRB(0.0,80.0,0.0,0.0),
+      child: Card(
+      color: Colors.white,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(5.0),
+      ),
       child: TextFormField(
         maxLines: 1,
         keyboardType: TextInputType.emailAddress,
         autofocus: false,
         decoration: InputDecoration(
           hintText: 'We promise not to tell',
-          labelText: 'Email',
+          labelText: 'Enter your email/ Username',
           icon : Icon(
             Icons.mail,
             color: Colors.grey,
@@ -46,34 +81,42 @@ class Login extends StatefulWidget {
       validator: (value) => value.isEmpty ? 'Email can\'t be empty':null,
       onSaved: (value) => _email.trim(),
       ),
+    )
     );
   }
 
 Widget showPasswordInput(){
   String _password;
   return Padding(
-    padding: const EdgeInsets.fromLTRB(0.0, 60.0, 0.0, 0.0),
-    child: TextFormField(
-      autofocus: false,
-      maxLines: 1,
-      obscureText: true,
-      decoration: InputDecoration(
+    padding: const EdgeInsets.fromLTRB(0.0, 20.0, 0.0, 0.0),
+    child: Card(
+      color: Colors.white,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(5.0),
+      ),
+      child: TextFormField(
+        autofocus: false,
+        maxLines: 1,
+        obscureText: true,
+        decoration: InputDecoration(
         hintText: 'Make sure it\'s private',
         labelText: 'Password',
         icon: Icon(
           Icons.lock,
           color: Colors.grey
       ),
-      ),
+        ),
       validator: (value) => value.isEmpty ? 'Password can\'t be empty': null,
-      onSaved: (value)=> _password.trim()
+      onSaved: (value)=> _password.trim(),
+    ),
     ),
     );
+
 }
 
 Widget showPrimaryButton(BuildContext context){
   return Padding(
-    padding: EdgeInsets.fromLTRB(0.0, 70.0, 0.0, 0.0),
+    padding: EdgeInsets.fromLTRB(0.0, 50.0, 0.0, 0.0),
     child: SizedBox(
       height: 40.0,
       child: RaisedButton(
@@ -99,7 +142,7 @@ Widget showPrimaryButton(BuildContext context){
 
 Widget showSecondaryButton(){
   return Padding(
-    padding: EdgeInsets.fromLTRB(0.0,10.0,0.0,0.0),
+    padding: EdgeInsets.fromLTRB(0.0,20.0,0.0,0.0),
     child: RaisedButton(
         elevation: 5.0,
         shape: RoundedRectangleBorder(
