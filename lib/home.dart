@@ -1,6 +1,6 @@
 import "package:flutter/material.dart";
-import './login.dart';
 import './list.dart';
+import './screen/signin_screen.dart';
 
 class Home extends StatelessWidget {
   @override
@@ -24,7 +24,7 @@ class Home extends StatelessWidget {
               ListTile(
               title: Text('Sign out'),
               onTap:(){
-                Navigator.of(context).push(MaterialPageRoute(builder: (context) => Login()));
+                Navigator.of(context).push(MaterialPageRoute(builder: (context) => SignInScreen()));
                 }
               ),
           ],

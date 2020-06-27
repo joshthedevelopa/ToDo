@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:todo/home.dart';
 
 class SignInScreen extends StatefulWidget {
   @override
@@ -36,7 +37,7 @@ class _SignInState extends State<SignInScreen> {
               Padding(
                 padding: EdgeInsets.symmetric(vertical: 40.0, horizontal: 14.0),
                 child: Text(
-                  "Save and oraginize your tasks and project ideas on Ola Saves",
+                  "Save and organize your tasks and project ideas on Ola Saves",
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 18.0,
@@ -86,7 +87,13 @@ class _SignInState extends State<SignInScreen> {
                   children: <Widget>[
                     RaisedButton(
                       color: Colors.blue,
-                      onPressed: () {},
+                      onPressed: () {
+                Navigator.push(
+                 context, 
+                MaterialPageRoute(
+                builder: (context) => Home(),),
+             );
+                      },
                       child: Padding(
                         padding: EdgeInsets.symmetric(
                             horizontal: 10.0, vertical: 12.0),
