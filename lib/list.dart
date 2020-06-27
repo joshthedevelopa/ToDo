@@ -42,7 +42,7 @@ class _ListsState extends State<Lists> {
             onDismissed: (left){
               setState((){
                 Tiles.lists.removeAt(index);
-
+                Tiles.completed.add(item);
               });
             },
             child: Card(
@@ -56,6 +56,11 @@ class _ListsState extends State<Lists> {
       ),
     );
   }
+
+
+
+
+
   _dialog(BuildContext context, _myController) {
   String _item;
   showDialog(
@@ -88,12 +93,6 @@ class _ListsState extends State<Lists> {
           onPressed: (){
             _myController.clear();
             Navigator.of(context).pop();
-           // Navigator.push(
-             // context, 
-              //MaterialPageRoute(
-                //builder: (context) => Home(),
-               // )
-                //);
           }
         )
       ]
@@ -104,10 +103,49 @@ class _ListsState extends State<Lists> {
 
 class Tiles {
   static List lists = [];
+  static List completed = [];
 
   static void addTile(value){
     lists.add(value);
   }
 }
 
+class Complete extends StatefulWidget {
+  @override
+  _CompleteState createState() => _CompleteState();
+}
+
+class _CompleteState extends State<Complete> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+    body:  ListView.builder(
+    itemCount: Tiles.completed.length,
+    itemBuilder: (BuildContext context, int index){
+      final item = Tiles.completed[index];
+          return Dismissible(
+            key: Key(item),
+            background: Container(
+              color: Colors.red,
+              child: Padding(
+                padding: EdgeInsets.fromLTRB(30, 20, 0, 0),
+              child:Text(
+                'Delete?', style: TextStyle(fontSize: 20, color: Colors.white, fontWeight: FontWeight.w500))),
+            ),
+            onDismissed: (left){
+              setState((){
+                Tiles.completed.removeAt(index);
+              });
+            },
+          child: Card(
+          child: ListTile(
+            title: Text(Tiles.completed[index], style: TextStyle(fontSize: 20)),
+          )
+          )
+          );
+    },
+  ) 
+  );
+  }
+}
 
