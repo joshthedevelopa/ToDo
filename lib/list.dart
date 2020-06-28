@@ -1,4 +1,9 @@
 import "package:flutter/material.dart";
+import 'dart:async';
+
+import 'package:speech_to_text/speech_to_text.dart';
+import 'package:speech_to_text/speech_recognition_result.dart';
+
 
 class Lists extends StatefulWidget {
   @override
@@ -6,6 +11,109 @@ class Lists extends StatefulWidget {
 }
 
 class _ListsState extends State<Lists> {
+
+
+bool _hasSpeech = false;
+  String lastWords = "";
+  String content = '';
+  final SpeechToText speech = SpeechToText();
+
+  //@override
+  //void initState() {
+    //super.initState();
+    //initSpeechState();
+    //_speak(context, _hasSpeech, speech);
+  //}
+
+  Future<void> initSpeechState() async {
+    bool hasSpeech = await speech.initialize();
+
+    if (!mounted) return;
+    setState(() {
+      _hasSpeech = hasSpeech;
+    });
+  }
+
+
+  void startListening() {
+    lastWords = "";
+    speech.listen(onResult: resultListener );
+    content = resultListener as String;
+    setState(() {
+      
+    });
+  }
+
+  void stopListening() {
+    speech.stop( );
+    setState(() {
+      
+    });
+  }
+
+  void cancelListening() {
+    speech.cancel( );
+    setState(() {
+      
+    });
+  }
+
+  void resultListener(SpeechRecognitionResult result) {
+    setState(() {
+      lastWords = "${result.recognizedWords}";
+    });
+  }
+
+
+
+  _speak(BuildContext context, bool _hasSpeech, speech,) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return StatefulBuilder(
+        builder: (context, setState){
+        return AlertDialog(
+      title: Text("What do you want to do?"),
+      content: _hasSpeech 
+          ? Text(content)
+          : Center( child: Text('Speech recognition unavailable', style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold))),
+      actions:_hasSpeech ? [ Row(
+        children:[
+        RaisedButton(
+          color: Colors.red,
+          child: Text("Start"),
+          onPressed: startListening
+        ),
+        FlatButton(
+          child: Text("Stop"),
+          onPressed: stopListening
+        ),
+          FlatButton(
+          child: Text("Reject"),
+          onPressed:(){
+            lastWords = '';
+          }
+        ),
+        FlatButton(
+          child: Text("Confirm"),
+          onPressed: (){
+            Navigator.of(context).pop();
+            if(lastWords.length>0)
+              Tiles.addTile(lastWords);
+            lastWords = '';
+          }
+        )
+      ]
+    )]: null,  
+    );
+    }
+    );
+});
+  }
+
+
+
+
   TextEditingController _myController= TextEditingController();
 
   @override
@@ -17,14 +125,30 @@ class _ListsState extends State<Lists> {
 
   @override
   Widget build(BuildContext context) {
+    initSpeechState();
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
+      floatingActionButton: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+         children: [
+        FloatingActionButton(
+        heroTag: 0,
         child: Icon(Icons.add),
         backgroundColor: Colors.red,
         onPressed: () {
           _dialog(context, _myController);
           setState(() {});
         },
+      ),
+      FloatingActionButton(
+        heroTag: 1,
+        child: Icon(Icons.mic),
+        backgroundColor: Colors.red,
+        onPressed: () {
+          setState((){
+            _speak(context,_hasSpeech, speech);
+          });
+        },
+      )]
       ),
       body: ListView.builder(
         itemCount: Tiles.lists.length,
@@ -47,7 +171,6 @@ class _ListsState extends State<Lists> {
             },
             child: Card(
             child: ListTile(
-            trailing: Icon(Icons.more_vert),
             title: Text(Tiles.lists[index], style: TextStyle(fontSize: 20)),
           )
           )

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
-
+import '../list.dart';
 import 'package:speech_to_text/speech_to_text.dart';
 import 'package:speech_to_text/speech_recognition_result.dart';
-import 'package:speech_to_text/speech_recognition_error.dart';
+
 
 
 class MyApp extends StatefulWidget {
@@ -14,18 +14,17 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   bool _hasSpeech = false;
   String lastWords = "";
-  String lastError = "";
-  String lastStatus = "";
   final SpeechToText speech = SpeechToText();
 
   @override
   void initState() {
     super.initState();
     initSpeechState();
+    _speak(context, _hasSpeech, speech);
   }
 
   Future<void> initSpeechState() async {
-    bool hasSpeech = await speech.initialize(onError: errorListener, onStatus: statusListener );
+    bool hasSpeech = await speech.initialize();
 
     if (!mounted) return;
     setState(() {
@@ -33,77 +32,9 @@ class _MyAppState extends State<MyApp> {
     });
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text('Speech to Text Example'),
-        ),
-        body: _hasSpeech
-            ? Column(children: [
-                Expanded(
-                  child: Center(
-                    child: Text('Speech recognition available'),
-                  ),
-                ),
-                Expanded(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      FlatButton(
-                        child: Text('Start'),
-                        onPressed: startListening,
-                      ),
-                      FlatButton(
-                        child: Text('Stop'),
-                        onPressed: stopListening,
-                      ),
-                      FlatButton(
-                        child: Text('Cancel'),
-                        onPressed:cancelListening,
-                      ),
-                    ],
-                  ),
-                ),
-                Expanded(
-                  child: Column(
-                    children: <Widget>[
-                      Center(
-                        child: Text('Recognized Words'),
-                      ),
-                      Center(
-                        child: Text(lastWords),
-                      ),
-                    ],
-                  ),
-                ),
-                Expanded(
-                  child: Column(
-                    children: <Widget>[
-                      Center(
-                        child: Text('Error'),
-                      ),
-                      Center(
-                        child: Text(lastError),
-                      ),
-                    ],
-                  ),
-                ),
-                Expanded(
-                  child: Center(
-                    child: speech.isListening ? Text("I'm listening...") : Text( 'Not listening' ),
-                  ),
-                ),
-              ])
-            : Center( child: Text('Speech recognition unavailable', style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold))),
-      ),
-    );
-  }
 
   void startListening() {
     lastWords = "";
-    lastError = "";
     speech.listen(onResult: resultListener );
     setState(() {
       
@@ -126,18 +57,55 @@ class _MyAppState extends State<MyApp> {
 
   void resultListener(SpeechRecognitionResult result) {
     setState(() {
-      lastWords = "${result.recognizedWords} - ${result.finalResult}";
+      lastWords = "${result.recognizedWords}";
     });
   }
 
-  void errorListener(SpeechRecognitionError error ) {
-    setState(() {
-      lastError = "${error.errorMsg} - ${error.permanent}";
-    });
-  }
-  void statusListener(String status ) {
-    setState(() {
-      lastStatus = "$status";
-    });
+  _speak(BuildContext context, bool _hasSpeech, speech) {
+  showDialog(
+    context: context,
+    
+    builder: (_)=> AlertDialog(
+      title: speech.isListening ? Text("I'm listening...") : Text( 'Not listening' ),
+      content: _hasSpeech
+      ? Text(lastWords)
+      : Center( child: Text('Speech recognition unavailable', style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold))),
+      actions:_hasSpeech ? Row(
+        children:[
+        RaisedButton(
+          color: Colors.red,
+          child: Text("Start"),
+          onPressed: (){
+            startListening();
+          }
+        ),
+        FlatButton(
+          child: Text("Stop"),
+          onPressed: (){
+            stopListening();
+          }
+        ),
+          FlatButton(
+          child: Text("Cancel"),
+          onPressed: (){
+            cancelListening();
+          }
+        ),
+        FlatButton(
+          child: Text("Confirm"),
+          onPressed: (){
+            Tiles.addTile(lastWords);
+          }
+        )
+      ]
+    ): [],  
+    ));
+}
+
+  @override
+  Widget build(BuildContext context) {
+    return new AlertDialog(
+      title: Text("Hey"),
+    );
   }
 }
