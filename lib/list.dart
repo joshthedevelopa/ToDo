@@ -70,7 +70,6 @@ class _ListsState extends State<Lists> {
                             child: Text("Start"),
                             onPressed: () {
                               startListening(setState);
-                              // setState(() {});
                             },
                           ),
                           FlatButton(
